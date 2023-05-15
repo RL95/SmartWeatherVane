@@ -41,7 +41,9 @@ The control firmware will be running on a NucleoF401RE.
 > Dibond plate must be added or replaced
 
 ## Preview of current CAD design
-![CAD_screenshot](CAD_screenshot_01.JPG "CAD_screenshot")
+![CAD_screenshot1](CAD_screenshot_01.JPG "CAD_screenshot1")
+
+![CAD_screenshot2](CAD_screenshot_02.JPG "CAD_screenshot2")
 
 ## TO DO
 > **Warning**
