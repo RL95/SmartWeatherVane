@@ -21,6 +21,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include <stdio.h>
 
 /* USER CODE END Includes */
 
@@ -56,6 +57,16 @@ static void MX_USART2_UART_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+int _write(int file, char *ptr, int len)
+{
+	for (int i = 0; i < len; i++){
+		ITM_SendChar(*ptr++);
+	}
+	return len;
+}
+
+int x = 0;
+int y = 2;
 
 /* USER CODE END 0 */
 
@@ -96,6 +107,9 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  printf("%d Hello World!\n", x++);
+	  y++;
+	  HAL_Delay(1000);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
