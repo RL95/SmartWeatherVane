@@ -48,7 +48,7 @@ TIM_HandleTypeDef htim10;
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
-
+uint8_t txdata[30] = "Hello world! :)\n\r";
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -114,9 +114,11 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
-  {
+  {/*
 	  printf("%d Hello World!\n", x++);
 	  y++;
+	  HAL_Delay(1000);*/
+	  HAL_UART_Transmit(&huart2, txdata, sizeof(txdata), 100);
 	  HAL_Delay(1000);
     /* USER CODE END WHILE */
 
