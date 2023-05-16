@@ -7,10 +7,14 @@ The project was developped at the [The University of Applied Sciences and Arts o
 (image © M. Jourdain de Thieulloy)
 
 ## Firmware
+### Description
 The control firmware will be running on a NucleoF401RE.
 
 > **Note**
 > Firmware implementation is in progress
+
+### Development platform
+The firmware is developped with [STM32CUBEIDE](https://www.st.com/en/development-tools/stm32cubeide.html)
 
 ### Dependencies
 > **Note**
