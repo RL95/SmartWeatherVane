@@ -70,7 +70,7 @@ uint16_t AS5048A_read(AS5048A *sensor, uint16_t registerAddress){
 	command = command | registerAddress;
 
 	//Add a parity bit on the the MSB
-	command |= ((uint16_t)spiCalcEvenParity(sensor, command)<<15);
+	command |= ((uint16_t)AS5048A_spiCalcEvenParity(sensor, command)<<15);
 
 	//Split the command into two bytes
 	data[1] = command & 0xFF;
@@ -111,7 +111,7 @@ uint16_t AS5048A_write(AS5048A *sensor, uint16_t registerAddress, uint16_t data)
 	command |= registerAddress;
 
 	//Add a parity bit on the the MSB
-	command |= ((uint16_t)spiCalcEvenParity(sensor, command)<<15);
+	command |= ((uint16_t)AS5048A_spiCalcEvenParity(sensor, command)<<15);
 
 	//Split the command into two bytes
 	dat[1] = command & 0xFF;
@@ -127,7 +127,7 @@ uint16_t AS5048A_write(AS5048A *sensor, uint16_t registerAddress, uint16_t data)
 	dataToSend |= data;
 
 	//Craft another packet including the data and parity
-	dataToSend |= ((uint16_t)spiCalcEvenParity(sensor, dataToSend)<<15);
+	dataToSend |= ((uint16_t)AS5048A_spiCalcEvenParity(sensor, dataToSend)<<15);
 	dat[1] = command & 0xFF;
 	dat[0] = ( command >> 8 ) & 0xFF;
 

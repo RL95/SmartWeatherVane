@@ -7,9 +7,12 @@
 
 #include "SmartWeatherVane_main.h"
 
-int x = 0;
-int y = 2;
+// COM port buffer
 uint8_t txdata[30] = "printing stuff on COM port\n\r";
+
+uint16_t current_angle = 0;
+float current_angle_map = 0;
+float angle = 0;
 
 /**
   * @brief  Master Rx Transfer completed callback.
@@ -19,12 +22,32 @@ uint8_t txdata[30] = "printing stuff on COM port\n\r";
   */
 void SmartWeatherVane_main(){
 
+	// initialise magnetic absolute encoder
+	AS5048A Encoder;
+	AS5048A_init(&Encoder, &hspi2, SPI_CS_GPIO_Port, SPI_CS_Pin);
+	HAL_Delay(100);
+	uint16_t zero_position;
+	float zero_position_map;
+	zero_position = AS5048A_getRawRotation(&Encoder);
+	printf("Zero: %d\n", zero_position);
+	zero_position_map = AS5048A_read2angle(&Encoder, zero_position);
+	printf("Angle: %f\n", zero_position_map);
 
 	while(1){
-		printf("%d This is a test mouahaha!\n", x++);
-		y--;
+		current_angle = AS5048A_getRawRotation(&Encoder);
+		current_angle_map = AS5048A_read2angle(&Encoder, current_angle);
+
+		float angle_temp = current_angle_map - zero_position_map;
+		angle = AS5048A_normalize(&Encoder, angle_temp);
+
+		printf("Current Angle: %d\nCurrent Angle Map: %f\nAngle: %f\n\n", current_angle, current_angle_map, angle);
+
+		if (AS5048A_error(&Encoder)) {
+		  printf("ERROR: %d\n", AS5048A_getErrors(&Encoder));
+		}
+
 		HAL_UART_Transmit(&huart2, txdata, sizeof(txdata), 100);
-		HAL_Delay(1000);
+		HAL_Delay(200);
 	}
 }
 

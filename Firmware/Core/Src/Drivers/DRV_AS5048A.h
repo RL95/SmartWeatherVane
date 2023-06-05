@@ -48,8 +48,8 @@ uint16_t AS5048A_getErrors(AS5048A *sensor);
 void AS5048A_setZeroPosition(AS5048A *sensor, uint16_t arg_position);
 uint16_t AS5048A_getZeroPosition(AS5048A *sensor);
 float AS5048A_normalize(AS5048A *sensor, float angle);
-float read2angle(AS5048A *sensor, uint16_t angle);
-uint8_t spiCalcEvenParity(AS5048A *sensor, uint16_t value);
+float AS5048A_read2angle(AS5048A *sensor, uint16_t angle);
+uint8_t AS5048A_spiCalcEvenParity(AS5048A *sensor, uint16_t value);
 
 extern SPI_HandleTypeDef hspi2;
 
