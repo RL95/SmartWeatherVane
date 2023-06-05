@@ -19,11 +19,13 @@ uint8_t txdata[30] = "printing stuff on COM port\n\r";
   */
 void SmartWeatherVane_main(){
 
-	printf("%d This is a test mouahaha!\n", x++);
-	y--;
-	HAL_UART_Transmit(&huart2, txdata, sizeof(txdata), 100);
-	HAL_Delay(1000);
 
+	while(1){
+		printf("%d This is a test mouahaha!\n", x++);
+		y--;
+		HAL_UART_Transmit(&huart2, txdata, sizeof(txdata), 100);
+		HAL_Delay(1000);
+	}
 }
 
 void Timer_Callback(){

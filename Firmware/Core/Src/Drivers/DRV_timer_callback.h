@@ -8,7 +8,7 @@
 #ifndef SRC_DRIVERS_DRV_TIMER_CALLBACK_H_
 #define SRC_DRIVERS_DRV_TIMER_CALLBACK_H_
 
-#include "../SmartWeatherVane_main.h"
+#include "main.h"
 
 void Timer_Callback_START();
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim);

@@ -10,8 +10,12 @@
 
 #include <main.h>
 #include <stdio.h>
+#include <math.h>
 #include "stdbool.h"
+#include "stdarg.h"
+#include "string.h"
 #include "Drivers/DRV_timer_callback.h"
+#include "Drivers/DRV_AS5048A.h"
 
 void SmartWeatherVane_main();
 void Timer_Callback();
