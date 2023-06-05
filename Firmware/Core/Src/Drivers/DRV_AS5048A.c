@@ -4,12 +4,12 @@
  * Initialiser
  * Sets up the SPI interface
  */
-void AS5048A_init(AS5048A *sensor){
+void AS5048A_init(AS5048A *sensor, SPI_HandleTypeDef *hspi, GPIO_TypeDef* arg_ps, uint16_t arg_cs){
 	DIS_SPI;
 	sensor->errorFlag = 0;
-	sensor->_cs = SPI_CS_Pin;
-	sensor->_ps = SPI_CS_GPIO_Port;
-	sensor->_spi = &hspi2;
+	sensor->_cs = arg_cs;
+	sensor->_ps = arg_ps;
+	sensor->_spi = hspi;
 	sensor->errorFlag = 0;
 	sensor->position = 0;
 	//You can write here various checking functions

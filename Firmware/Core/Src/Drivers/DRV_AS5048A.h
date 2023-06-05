@@ -34,7 +34,7 @@ typedef struct AS5048A{
 	//uint16_t transaction(uint16_t data);
 } AS5048A;
 
-void AS5048A_init(AS5048A *sensor);
+void AS5048A_init(AS5048A *sensor, SPI_HandleTypeDef *hspi, GPIO_TypeDef* arg_ps, uint16_t arg_cs);
 void AS5048A_close(AS5048A *sensor);
 void AS5048A_open(AS5048A *sensor);
 uint16_t AS5048A_read(AS5048A *sensor, uint16_t registerAddress);
