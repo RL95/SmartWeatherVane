@@ -56,7 +56,7 @@ The firmware is developped with [STM32CUBEIDE](https://www.st.com/en/development
 
 - [X] Order stuff
 - [X] Initial design
-  - [ ] Change 40x40 to 45x45
+  - [X] Change 40x40 to 45x45
 - [ ] Firmware stuff
   - [X] Setup intial Serial output
   - [X] Setup live graph in IDE
@@ -64,5 +64,5 @@ The firmware is developped with [STM32CUBEIDE](https://www.st.com/en/development
   - [ ] Setup COM port selection
   - [ ] Setup Python module
 - [ ] Mechanical stuff
-  - [ ] Cut extrusions
+  - [X] Cut extrusions
   - [ ] Assembly
