@@ -23,7 +23,7 @@ void SmartWeatherVane_main(){
 
 	// initialise magnetic absolute encoder
 	AS5048A Encoder;
-	AS5048A_init(&Encoder, &hspi2, SPI_CS_GPIO_Port, SPI_CS_Pin);
+	AS5048A_init(&Encoder, &hspi2, AS5048_CS_GPIO_Port, AS5048_CS_Pin);
 	HAL_Delay(100);
 	uint16_t zero_position;
 	float zero_position_map;

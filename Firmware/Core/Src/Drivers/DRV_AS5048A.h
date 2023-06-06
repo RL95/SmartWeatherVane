@@ -10,8 +10,8 @@
 
 #include "main.h"
 
-#define EN_SPI HAL_GPIO_WritePin(SPI_CS_GPIO_Port, SPI_CS_Pin, GPIO_PIN_RESET);
-#define DIS_SPI HAL_GPIO_WritePin(SPI_CS_GPIO_Port, SPI_CS_Pin, GPIO_PIN_SET);
+#define EN_SPI HAL_GPIO_WritePin(AS5048_CS_GPIO_Port, AS5048_CS_Pin, GPIO_PIN_RESET);
+#define DIS_SPI HAL_GPIO_WritePin(AS5048_CS_GPIO_Port, AS5048_CS_Pin, GPIO_PIN_SET);
 
 #define AS5048A_CLEAR_ERROR_FLAG              0x0001
 #define AS5048A_PROGRAMMING_CONTROL           0x0003
