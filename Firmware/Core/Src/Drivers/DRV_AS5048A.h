@@ -10,8 +10,8 @@
 
 #include "main.h"
 
-#define EN_SPI HAL_GPIO_WritePin(AS5048_CS_GPIO_Port, AS5048_CS_Pin, GPIO_PIN_RESET);
-#define DIS_SPI HAL_GPIO_WritePin(AS5048_CS_GPIO_Port, AS5048_CS_Pin, GPIO_PIN_SET);
+#define AS5048_EN_SPI HAL_GPIO_WritePin(AS5048_CS_GPIO_Port, AS5048_CS_Pin, GPIO_PIN_RESET);
+#define AS5048_DIS_SPI HAL_GPIO_WritePin(AS5048_CS_GPIO_Port, AS5048_CS_Pin, GPIO_PIN_SET);
 
 #define AS5048A_CLEAR_ERROR_FLAG              0x0001
 #define AS5048A_PROGRAMMING_CONTROL           0x0003
@@ -24,14 +24,9 @@
 typedef struct AS5048A{
 	uint8_t errorFlag;
 	uint16_t _cs;
-	uint16_t cs;
 	GPIO_TypeDef* _ps;
 	SPI_HandleTypeDef* _spi;
-	uint8_t dout;
-	uint8_t din;
-	uint8_t clk;
 	uint16_t position;
-	//uint16_t transaction(uint16_t data);
 } AS5048A;
 
 void AS5048A_init(AS5048A *sensor, SPI_HandleTypeDef *hspi, GPIO_TypeDef* arg_ps, uint16_t arg_cs);
@@ -52,6 +47,5 @@ float AS5048A_read2angle(AS5048A *sensor, uint16_t angle);
 uint8_t AS5048A_spiCalcEvenParity(AS5048A *sensor, uint16_t value);
 
 extern SPI_HandleTypeDef hspi2;
-
 
 #endif /* SRC_DRIVERS_DRV_AS5048A_H_ */

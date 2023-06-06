@@ -10,7 +10,17 @@
 
 #include "main.h"
 
-//#define EN_SPI HAL_GPIO_WritePin(SPI_CS_GPIO_Port, SPI_CS_Pin, GPIO_PIN_RESET);
-//#define DIS_SPI HAL_GPIO_WritePin(SPI_CS_GPIO_Port, SPI_CS_Pin, GPIO_PIN_SET);
+#define TMC_EN_SPI HAL_GPIO_WritePin(TMC_CS_GPIO_Port, TMC_CS_Pin, GPIO_PIN_RESET);
+#define TMC_DIS_SPI HAL_GPIO_WritePin(TMC_CS_GPIO_Port, TMC_CS_Pin, GPIO_PIN_SET);
+
+typedef struct TMC{
+	uint8_t errorFlag;
+	//uint16_t _cs;
+	//GPIO_TypeDef* _ps;
+	//SPI_HandleTypeDef* _spi;
+	uint16_t position;
+} TMC;
+
+void TMC_init(TMC *PMSM);
 
 #endif /* SRC_DRIVERS_DRV_TMC2660_H_ */

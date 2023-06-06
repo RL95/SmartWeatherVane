@@ -16,6 +16,7 @@
 #include "string.h"
 #include "Drivers/DRV_timer_callback.h"
 #include "Drivers/DRV_AS5048A.h"
+#include "Drivers/DRV_TMC2660.h"
 
 void SmartWeatherVane_main();
 void Timer_Callback();

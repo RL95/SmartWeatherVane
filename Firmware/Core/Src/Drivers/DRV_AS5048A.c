@@ -1,10 +1,17 @@
+/*
+ * DRV_AS5048A.c
+ *
+ *  Created on: Jun 5, 2023
+ *      Author: R.Lin
+ */
+
 #include "DRV_AS5048A.h"
 
 /**
  * @brief Initialiser Sets up the SPI interface
  */
 void AS5048A_init(AS5048A *sensor, SPI_HandleTypeDef *hspi, GPIO_TypeDef* arg_ps, uint16_t arg_cs){
-	DIS_SPI;
+	AS5048_DIS_SPI;
 	sensor->errorFlag = 0;
 	sensor->_cs = arg_cs;
 	sensor->_ps = arg_ps;
@@ -67,15 +74,15 @@ uint16_t AS5048A_read(AS5048A *sensor, uint16_t registerAddress){
 	data[1] = command & 0xFF;
 	data[0] = ( command >> 8 ) & 0xFF;
 
-	EN_SPI;
+	AS5048_EN_SPI;
 	HAL_SPI_Transmit(sensor->_spi, (uint8_t *)&data, 2, 0xFFFF);
 	while (HAL_SPI_GetState(sensor->_spi) != HAL_SPI_STATE_READY) {}
-	DIS_SPI;
+	AS5048_DIS_SPI;
 
-	EN_SPI;
+	AS5048_EN_SPI;
 	HAL_SPI_Receive(sensor->_spi, (uint8_t *)&data, 2, 0xFFFF);
 	while (HAL_SPI_GetState(sensor->_spi) != HAL_SPI_STATE_READY) {}
-	DIS_SPI;
+	AS5048_DIS_SPI;
 
 	if (data[1] & 0x40) {
 		sensor->errorFlag = 1;
@@ -109,10 +116,10 @@ uint16_t AS5048A_write(AS5048A *sensor, uint16_t registerAddress, uint16_t data)
 	dat[0] = ( command >> 8 ) & 0xFF;
 
 	//Start the write command with the target address
-	EN_SPI;
+	AS5048_EN_SPI;
 	HAL_SPI_Transmit(sensor->_spi, (uint8_t *)&dat, 2, 0xFFFF);
 	while (HAL_SPI_GetState(sensor->_spi) != HAL_SPI_STATE_READY) {}
-	DIS_SPI;
+	AS5048_DIS_SPI;
 
 	uint16_t dataToSend = 0b0000000000000000;
 	dataToSend |= data;
@@ -123,20 +130,20 @@ uint16_t AS5048A_write(AS5048A *sensor, uint16_t registerAddress, uint16_t data)
 	dat[0] = ( command >> 8 ) & 0xFF;
 
 	//Now send the data packet
-	EN_SPI;
+	AS5048_EN_SPI;
 	HAL_SPI_Transmit(sensor->_spi, (uint8_t *)&dat, 2, 0xFFFF);
 	while (HAL_SPI_GetState(sensor->_spi) != HAL_SPI_STATE_READY) {}
-	DIS_SPI;
+	AS5048_DIS_SPI;
 
 	//Send a NOP to get the new data in the register
 	dat[1] = 0x00;
 	dat[0] = 0x00;
-	EN_SPI;
+	AS5048_EN_SPI;
 	HAL_SPI_Transmit(sensor->_spi, (uint8_t *)&dat, 2, 0xFFFF);
 	while (HAL_SPI_GetState(sensor->_spi) != HAL_SPI_STATE_READY) {}
 	HAL_SPI_Receive(sensor->_spi, (uint8_t *)&dat, 2, 0xFFFF);
 	while (HAL_SPI_GetState(sensor->_spi) != HAL_SPI_STATE_READY) {}
-	DIS_SPI;
+	AS5048_DIS_SPI;
 
 	//Return the data, stripping the parity and error bits
 	return (( ( dat[1] & 0xFF ) << 8 ) | ( dat[0] & 0xFF )) & ~0xC000;
