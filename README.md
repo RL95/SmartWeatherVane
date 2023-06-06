@@ -57,12 +57,15 @@ The firmware is developped with [STM32CUBEIDE](https://www.st.com/en/development
 - [X] Order stuff
 - [X] Initial design
   - [X] Change 40x40 to 45x45
-- [ ] Firmware stuff
+- [ ] Firmware stuff 
+  - [X] Write AS5048A driver
+  - [X] Write TMC6062 driver
   - [X] Setup intial Serial output
   - [X] Setup live graph in IDE
   - [ ] Setup simple TKinter GUI
-  - [ ] Setup COM port selection
+  - [X] Setup COM port
   - [ ] Setup Python module
 - [ ] Mechanical stuff
+  - [X] Solenoid brake system 
   - [X] Cut extrusions
   - [ ] Assembly
