@@ -1,8 +1,7 @@
 #include "DRV_AS5048A.h"
 
 /**
- * Initialiser
- * Sets up the SPI interface
+ * @brief Initialiser Sets up the SPI interface
  */
 void AS5048A_init(AS5048A *sensor, SPI_HandleTypeDef *hspi, GPIO_TypeDef* arg_ps, uint16_t arg_cs){
 	DIS_SPI;
@@ -12,44 +11,36 @@ void AS5048A_init(AS5048A *sensor, SPI_HandleTypeDef *hspi, GPIO_TypeDef* arg_ps
 	sensor->_spi = hspi;
 	sensor->errorFlag = 0;
 	sensor->position = 0;
-	//You can write here various checking functions
+
 	AS5048A_close(sensor);
 	AS5048A_open(sensor);
 }
 
 /**
- * Closes the SPI connection
- * SPI has an internal SPI-device counter, for each init()-call the close() function must be called exactly 1 time
+ * @brief 	Closes the SPI connection
+ * @note  	SPI has an internal SPI-device counter, for each init()-call the close() function must be called exactly 1 time
  */
 void AS5048A_close(AS5048A *sensor){
-	if (HAL_SPI_DeInit(sensor->_spi) != HAL_OK)
-	{
-		//User error function
-	}
+	if (HAL_SPI_DeInit(sensor->_spi) != HAL_OK);
 }
 
 /**
- * Openthe SPI connection
- * SPI has an internal SPI-device counter, for each init()-call the close() function must be called exactly 1 time
+ * @brief 	Open the SPI connection
+ * @note  	SPI has an internal SPI-device counter, for each init()-call the close() function must be called exactly 1 time
  */
 void AS5048A_open(AS5048A *sensor){
-	if (HAL_SPI_Init(sensor->_spi) != HAL_OK)
-	{
-		//User error function
-	}
+	if (HAL_SPI_Init(sensor->_spi) != HAL_OK);
 }
 
 /**
- * Utility function used to calculate even parity of word
+ * @brief 	Utility function used to calculate even parity of word
  */
 uint8_t AS5048A_spiCalcEvenParity(AS5048A *sensor, uint16_t value){
 	uint8_t cnt = 0;
 	uint8_t i;
 
-	for (i = 0; i < 16; i++)
-	{
-		if (value & 0x1)
-		{
+	for (i = 0; i < 16; i++){
+		if (value & 0x1){
 			cnt++;
 		}
 		value >>= 1;
@@ -58,9 +49,9 @@ uint8_t AS5048A_spiCalcEvenParity(AS5048A *sensor, uint16_t value){
 }
 
 /*
- * Read a register from the sensor
- * Takes the address of the register as a 16 bit word
- * Returns the value of the register
+ * @brief  	Read a register from the sensor
+ * 	       	Takes the address of the register as a 16 bit word
+ * @return 	Returns the value of the register
  */
 uint16_t AS5048A_read(AS5048A *sensor, uint16_t registerAddress){
 
@@ -97,11 +88,11 @@ uint16_t AS5048A_read(AS5048A *sensor, uint16_t registerAddress){
 }
 
 /*
- * Write to a register
- * Takes the 16-bit  address of the target register and the 16 bit word of data
- * to be written to that register
- * Returns the value of the register after the write has been performed. This
- * is read back from the sensor to ensure a sucessful write.
+ * @brief	Write to a register
+ * @note 	Takes the 16-bit  address of the target register and the 16 bit word of data
+ * 			to be written to that register
+ * @return	Returns the value of the register after the write has been performed. This
+ * 			is read back from the sensor to ensure a sucessful write.
  */
 uint16_t AS5048A_write(AS5048A *sensor, uint16_t registerAddress, uint16_t data) {
 
@@ -152,16 +143,16 @@ uint16_t AS5048A_write(AS5048A *sensor, uint16_t registerAddress, uint16_t data)
 }
 
 /**
- * Returns the raw angle directly from the sensor
+ * @brief	Returns the raw angle directly from the sensor
  */
 uint16_t AS5048A_getRawRotation(AS5048A *sensor){
 	return AS5048A_read(sensor, AS5048A_ANGLE);
 }
 
 /**
- * Get the rotation of the sensor relative to the zero position.
+ * @brief	Get the rotation of the sensor relative to the zero position.
  *
- * @return {int} between -2^13 and 2^13
+ * @return 	integer between -2^13 and 2^13
  */
 int AS5048A_getRotation(AS5048A *sensor){
 	uint16_t data;
@@ -176,8 +167,8 @@ int AS5048A_getRotation(AS5048A *sensor){
 }
 
 /**
- * returns the value of the state register
- * @return 16 bit word containing flags
+ * @brief 	the value of the state register
+ * @return 	16 bit word containing flags
  */
 uint16_t AS5048A_getState(AS5048A *sensor){
 	return AS5048A_read(sensor, AS5048A_DIAG_AGC);
@@ -191,8 +182,8 @@ uint8_t AS5048A_error(AS5048A *sensor){
 }
 
 /**
- * Returns the value used for Automatic Gain Control (Part of diagnostic
- * register)
+ * @brief 	Returns the value used for Automatic Gain Control (Part of diagnostic
+ * 			register)
  */
 uint8_t AS5048A_getGain(AS5048A *sensor){
 	uint16_t data = AS5048A_getState(sensor);
@@ -200,31 +191,30 @@ uint8_t AS5048A_getGain(AS5048A *sensor){
 }
 
 /*
- * Get and clear the error register by reading it
+ * @brief 	Get and clear the error register by reading it
  */
 uint16_t AS5048A_getErrors(AS5048A *sensor){
 	return AS5048A_read(sensor, AS5048A_CLEAR_ERROR_FLAG);
 }
 
 /*
- * Set the zero position
+ * @brief 	Set the zero position
  */
 void AS5048A_setZeroPosition(AS5048A *sensor, uint16_t arg_position){
 	sensor->position = arg_position % 0x3FFF;
 }
 
 /*
- * Returns the current zero position
+ * @brief 	Returns the current zero position
  */
 uint16_t AS5048A_getZeroPosition(AS5048A *sensor){
 	return sensor->position;
 }
 
 /*
- * Returns normalized angle value
+ * @brief 	Returns normalized angle value
  */
 float AS5048A_normalize(AS5048A *sensor, float angle) {
-	// http://stackoverflow.com/a/11498248/3167294
 	#ifdef ANGLE_MODE_1
 		angle += 180;
 	#endif
@@ -239,14 +229,8 @@ float AS5048A_normalize(AS5048A *sensor, float angle) {
 }
 
 /*
- * Returns caalculated angle value
+ * @brief 	Returns calculated angle value
  */
 float AS5048A_read2angle(AS5048A *sensor, uint16_t angle) {
-	/*
-	 * 14 bits = 2^(14) - 1 = 16.383
-	 *
-	 * https://www.arduino.cc/en/Reference/Map
-	 *
-	 */
 	return (float)angle * ((float)360 / 16383);
 };

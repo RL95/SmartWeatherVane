@@ -18,7 +18,6 @@ float angle = 0;
   * @brief  Master Rx Transfer completed callback.
   * @param  hi2c Pointer to a I2C_HandleTypeDef structure that contains
   *                the configuration information for the specified I2C.
-  * @retval None
   */
 void SmartWeatherVane_main(){
 
@@ -33,6 +32,7 @@ void SmartWeatherVane_main(){
 	zero_position_map = AS5048A_read2angle(&Encoder, zero_position);
 	printf("Angle: %f\n", zero_position_map);
 
+	// super-loop
 	while(1){
 		current_angle = AS5048A_getRawRotation(&Encoder);
 		current_angle_map = AS5048A_read2angle(&Encoder, current_angle);
@@ -47,10 +47,13 @@ void SmartWeatherVane_main(){
 		}
 
 		HAL_UART_Transmit(&huart2, txdata, sizeof(txdata), 100);
-		HAL_Delay(200);
+		HAL_Delay(10);
 	}
 }
 
+/**
+  * @brief  TIM10 callback running @ 10kHz
+  */
 void Timer_Callback(){
 
 }
