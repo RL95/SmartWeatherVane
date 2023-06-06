@@ -32,8 +32,14 @@ void SmartWeatherVane_main(){
 	zero_position_map = AS5048A_read2angle(&Encoder, zero_position);
 	printf("Angle: %f\n", zero_position_map);
 
+	// initialise Stepper motor
+	TMC Motor;
+	TMC_init(&Motor);
+
 	// super-loop
 	while(1){
+		TMC_test_run();
+
 		current_angle = AS5048A_getRawRotation(&Encoder);
 		current_angle_map = AS5048A_read2angle(&Encoder, current_angle);
 

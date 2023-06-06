@@ -10,8 +10,29 @@
 
 #include "main.h"
 
-#define TMC_EN_SPI HAL_GPIO_WritePin(TMC_CS_GPIO_Port, TMC_CS_Pin, GPIO_PIN_RESET);
-#define TMC_DIS_SPI HAL_GPIO_WritePin(TMC_CS_GPIO_Port, TMC_CS_Pin, GPIO_PIN_SET);
+// ####### specifications for 103H7823-5740 #######
+#define HOLDING_TORQUE		2.7f		// Nm
+#define RATED_CURRENT		2.0f		// A
+#define WINDING_RESISTANCE	2.4f		// ohm/phase
+#define WINDING_INDUCTANVE	9.5f		// mH/phase
+#define ROTOR_INERTIA		0.000084f	// kg*m^2
+#define STEP_SIZE			1.8f		// deg
+#define STEP_NUMBER			200.0f		// step/revolution
+#define MAX_SELF_START_FREQ	800.0f		// Hz (when motor not loaded and in full-step mode)
+
+
+// GPIO macros
+//#define TMC_EN_SPI HAL_GPIO_WritePin(TMC_CS_GPIO_Port, TMC_CS_Pin, GPIO_PIN_RESET);
+//#define TMC_DIS_SPI HAL_GPIO_WritePin(TMC_CS_GPIO_Port, TMC_CS_Pin, GPIO_PIN_SET);
+
+#define TMC_EN_DRV HAL_GPIO_WritePin(TMC_EN_GPIO_Port, TMC_EN_Pin, GPIO_PIN_RESET);
+#define TMC_DIS_DRV HAL_GPIO_WritePin(TMC_EN_GPIO_Port, TMC_EN_Pin, GPIO_PIN_SET);
+
+#define TMC_STEP_H HAL_GPIO_WritePin(TMC_STEP_GPIO_Port, TMC_STEP_Pin, GPIO_PIN_SET);
+#define TMC_STEP_L HAL_GPIO_WritePin(TMC_STEP_GPIO_Port, TMC_STEP_Pin, GPIO_PIN_RESET);
+
+#define TMC_DIR_CW HAL_GPIO_WritePin(TMC_DIR_GPIO_Port, TMC_DIR_Pin, GPIO_PIN_RESET);
+#define TMC_DIR_CCW HAL_GPIO_WritePin(TMC_DIR_GPIO_Port, TMC_DIR_Pin, GPIO_PIN_SET);
 
 typedef struct TMC{
 	uint8_t errorFlag;
@@ -22,5 +43,6 @@ typedef struct TMC{
 } TMC;
 
 void TMC_init(TMC *PMSM);
+void TMC_test_run();
 
 #endif /* SRC_DRIVERS_DRV_TMC2660_H_ */
