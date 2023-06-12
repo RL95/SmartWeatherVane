@@ -7,9 +7,6 @@
 
 #include "SmartWeatherVane_main.h"
 
-// COM port buffer
-uint8_t txdata[30] = "printing stuff on COM port\n\r";
-
 uint16_t current_angle = 0;
 float current_angle_map = 0;
 float angle = 0;
@@ -36,7 +33,7 @@ void SmartWeatherVane_main(){
 	zero_position_map = AS5048A_read2angle(&Encoder, zero_position);
 	printf("Angle: %f\n", zero_position_map);
 
-	TMC_test_run();
+	//TMC_test_run();
 
 	// super-loop
 	while(1){
@@ -53,7 +50,10 @@ void SmartWeatherVane_main(){
 		  printf("ERROR: %d\n", AS5048A_getErrors(&Encoder));
 		}
 
-		HAL_UART_Transmit(&huart2, txdata, sizeof(txdata), 100);
+		uint8_t uart_tx_buffer[30];
+		int ret = snprintf(uart_tx_buffer, sizeof uart_tx_buffer, "Current Angle: %f \r\n", current_angle);
+		HAL_UART_Transmit(&huart2, uart_tx_buffer, sizeof(uart_tx_buffer), 100);
+
 		HAL_Delay(10);
 	}
 }
