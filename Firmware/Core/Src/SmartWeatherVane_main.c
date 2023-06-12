@@ -7,7 +7,7 @@
 
 #include "SmartWeatherVane_main.h"
 
-uint16_t current_angle = 0;
+float current_angle = 0;
 float current_angle_map = 0;
 float angle = 0;
 
@@ -39,20 +39,10 @@ void SmartWeatherVane_main(){
 	while(1){
 
 		current_angle = AS5048A_getRawRotation(&Encoder);
-		current_angle_map = AS5048A_read2angle(&Encoder, current_angle);
 
-		float angle_temp = current_angle_map - zero_position_map;
-		angle = AS5048A_normalize(&Encoder, angle_temp);
-
-		printf("Current Angle: %d\nCurrent Angle Map: %f\nAngle: %f\n\n", current_angle, current_angle_map, angle);
-
-		if (AS5048A_error(&Encoder)) {
-		  printf("ERROR: %d\n", AS5048A_getErrors(&Encoder));
-		}
-
-		uint8_t uart_tx_buffer[30];
-		int ret = snprintf(uart_tx_buffer, sizeof uart_tx_buffer, "Current Angle: %f \r\n", current_angle);
-		HAL_UART_Transmit(&huart2, uart_tx_buffer, sizeof(uart_tx_buffer), 100);
+		char uart_tx_buffer[30];
+		snprintf(uart_tx_buffer, sizeof uart_tx_buffer, "Current Angle: %f \r\n", current_angle);
+		HAL_UART_Transmit(&huart2, (uint8_t *)&uart_tx_buffer, sizeof(uart_tx_buffer), 100);
 
 		HAL_Delay(10);
 	}
