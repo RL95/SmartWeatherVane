@@ -18,6 +18,7 @@
 #include "Drivers/DRV_AS5048A.h"
 #include "Drivers/DRV_TMC2660.h"
 #include "Drivers/DRV_PWM.h"
+#include "Drivers/DRV_motion_profiling.h"
 
 void SmartWeatherVane_main();
 void Timer_Callback();
