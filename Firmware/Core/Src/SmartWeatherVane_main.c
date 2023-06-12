@@ -2,7 +2,7 @@
  * SmartWeatherVane_main.c
  *
  *  Created on: 22 May 2023
- *      Author: ruili
+ *      Author: R.Lin
  */
 
 #include "SmartWeatherVane_main.h"
