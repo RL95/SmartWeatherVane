@@ -19,6 +19,7 @@
 #define STEP_SIZE			1.8f		// deg
 #define STEP_NUMBER			200.0f		// step/revolution
 #define MAX_SELF_START_FREQ	800.0f		// Hz (when motor not loaded and in full-step mode)
+#define MICROSTEPPING_SIZE	16.0f		// Step size is multiplied by this factor
 
 
 // GPIO macros

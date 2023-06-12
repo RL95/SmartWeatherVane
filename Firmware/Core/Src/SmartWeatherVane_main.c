@@ -33,7 +33,7 @@ void SmartWeatherVane_main(){
 	zero_position_map = AS5048A_read2angle(&Encoder, zero_position);
 	printf("Angle: %f\n", zero_position_map);
 
-	//TMC_test_run();
+	TMC_test_run();
 
 	// super-loop
 	while(1){
@@ -42,7 +42,7 @@ void SmartWeatherVane_main(){
 		angle =  AS5048A_read2angle(&Encoder, raw_angle);
 
 		char uart_tx_buffer[30];
-		snprintf(uart_tx_buffer, sizeof uart_tx_buffer, "angle : %.3f \r\n", angle);
+		snprintf(uart_tx_buffer, sizeof uart_tx_buffer, "%.3f \r\n", angle);
 		// truncate buffer at newline character
 		char line_end = '\n';
 		char *ptr = strchr(uart_tx_buffer, line_end);

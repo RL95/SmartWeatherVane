@@ -14,24 +14,28 @@ void TMC_init(TMC *PMSM){
 	TMC_DIS_SPI;
 	TMC_DIS_DRV;
 	TMC_DIR_CW;
+	TMC_STEP_L;
 }
+
+int t = 1;
 
 void TMC_test_run(){
 	TMC_EN_DRV;
 	TMC_DIR_CW;
-	for (uint16_t i = 0; i < 200; i++) {
+	for (uint16_t i = 0; i < 200 * MICROSTEPPING_SIZE; i++) {
 		TMC_STEP_H;
-		HAL_Delay(20);
+		HAL_Delay(t);
 		TMC_STEP_L;
-		HAL_Delay(20);
+		HAL_Delay(t);
 	}
 	TMC_DIR_CCW;
-	for (uint16_t i = 0; i < 200; i++) {
+	for (uint16_t i = 0; i < 200 * MICROSTEPPING_SIZE; i++) {
 		TMC_STEP_H;
-		HAL_Delay(20);
+		HAL_Delay(t);
 		TMC_STEP_L;
-		HAL_Delay(20);
+		HAL_Delay(t);
 	}
 	TMC_DIS_DRV;
+	TMC_DIR_CW;
 
 }
