@@ -34,7 +34,8 @@ void SmartWeatherVane_main(){
 	printf("Angle: %f\n", zero_position_map);
 
 	PWM_Start();
-	PWM_Set_DutyCycle(50);
+
+	PWM_Set(1000, 50);
 
 	TMC_test_run();
 

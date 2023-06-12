@@ -59,7 +59,32 @@ void PWM_Set_DutyCycle(float DC){
   * @param  float freq
   * 		freq set in Hz
   * 		This parameter can be a value between 100 and 8000
+  * @warn	If only frequency is changed, duty cycle wil be affected.
+  * 		Use PWM_Set function instead!
   */
 void PWM_Set_Frequency(float freq){
+	uint32_t ARR = 1000 - 1;
 
+	// make sure the input value is clamped between 0 and 100
+	if((freq >= 100) | (freq <= 8000)) ARR = TIMER_CLOCK_FREQ / htim3.Init.Prescaler / (freq - 1);
+
+	// write to register
+	htim3.Init.Period = ARR;
+	TIM3->ARR = ARR;
+}
+
+/**
+  * @brief  set PWM channel frequency and duty cycle
+  * @param  float freq
+  * 		freq set in Hz
+  * 		This parameter can be a value between 100 and 8000
+  * @param  float DC
+  * 		Duty cycle set in percent
+  * 		This parameter can be a value between 0.0 and 100.0
+  */
+void PWM_Set(float freq, float DC){
+	// set frequency
+	PWM_Set_Frequency(freq);
+	// set duty cycle
+	PWM_Set_DutyCycle(DC);
 }
