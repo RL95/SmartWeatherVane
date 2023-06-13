@@ -24,17 +24,33 @@ void TMC_test_run(){
 	TMC_DIR_CW;
 
 	PWM_Start();
-	PWM_Set(700, 50);
-	HAL_Delay(2000);
+	for (int i = 20; i < 10000; i += 10){
+		PWM_Set(i, 50);
+		HAL_Delay(1);
+	}
+	HAL_Delay(10000);
+	for (int i = 8000; i > 20; i -= 10){
+		PWM_Set(i, 50);
+		HAL_Delay(1);
+	}
+	PWM_Stop();
+/*
+	PWM_Start();
+	PWM_Set(800, 50);
+	HAL_Delay(10000);
 	PWM_Stop();
 
 	TMC_DIR_CCW;
 
 	PWM_Start();
-	PWM_Set(700, 50);
-	HAL_Delay(2000);
+	PWM_Set(600, 50);
+	HAL_Delay(10000);
+	PWM_Set(100, 50);
+	HAL_Delay(10000);
+	PWM_Set(20, 50);
+	HAL_Delay(10000);
 	PWM_Stop();
-
+*/
 
 	/*
 	for (uint16_t i = 0; i < 200 * MICROSTEPPING_SIZE; i++) {
