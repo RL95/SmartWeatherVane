@@ -33,6 +33,9 @@ void SmartWeatherVane_main(){
 	zero_position_map = AS5048A_read2angle(&Encoder, zero_position);
 	printf("Angle: %f\n", zero_position_map);
 
+	// initialise uart communication
+	UART_init();
+
 	UART_send_start_msg();
 	UART_send_instruction_msg();
 

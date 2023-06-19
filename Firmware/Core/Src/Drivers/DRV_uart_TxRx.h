@@ -10,6 +10,7 @@
 
 #include "main.h"
 
+void UART_init();
 void UART_send(char * msg);
 void UART_send_start_msg();
 void UART_send_instruction_msg();
