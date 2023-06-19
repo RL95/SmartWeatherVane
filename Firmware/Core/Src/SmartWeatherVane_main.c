@@ -10,6 +10,7 @@
 uint16_t raw_angle = 0;
 float current_angle_map = 0;
 float angle = 0;
+float angle_offset = 0;
 
 bool stream_en = 0;
 bool stream_once = 0;
@@ -29,13 +30,13 @@ void SmartWeatherVane_main(){
 
 	// initialise magnetic absolute encoder
 	AS5048A_init(&Encoder, &hspi2, AS5048_CS_GPIO_Port, AS5048_CS_Pin);
-	HAL_Delay(100);
+	HAL_Delay(100);/*
 	uint16_t zero_position;
 	float zero_position_map;
 	zero_position = AS5048A_getRawRotation(&Encoder);
 	printf("Zero: %d\n", zero_position);
 	zero_position_map = AS5048A_read2angle(&Encoder, zero_position);
-	printf("Angle: %f\n", zero_position_map);
+	printf("Angle: %f\n", zero_position_map);*/
 
 	// initialise uart communication
 	UART_init();
@@ -63,7 +64,8 @@ void Timer_Callback_10Hz(){
 	if(stream_en || stream_once){
 		// get angle
 		raw_angle = AS5048A_getRawRotation(&Encoder);
-		angle =  AS5048A_read2angle(&Encoder, raw_angle);
+		float angle_temp =  AS5048A_read2angle(&Encoder, raw_angle) - angle_offset;
+		angle = AS5048A_normalize(&Encoder,angle_temp);
 
 		char uart_tx_buffer[1024];
 		snprintf(uart_tx_buffer, sizeof uart_tx_buffer, "%.3f \r\n", angle);
@@ -87,36 +89,39 @@ void Timer_Callback_10kHz(){
 	switch(UART_Rx_data[0])
 	    {
 	        case 's':
-	        	stream_en = 1;
 	        	UART_Rx_data[0] = '*';
+	        	stream_en = 1;
 	            break;
 
 	        case 'a':
-	        	stream_once = 1;
 	        	UART_Rx_data[0] = '*';
+	        	stream_once = 1;
+	            break;
+
+	        case 'z':
+	        	UART_Rx_data[0] = '*';
+	        	angle_offset = AS5048A_read2angle(&Encoder, raw_angle);
+	        	char set_zero_msg[16];
+				snprintf(set_zero_msg, sizeof set_zero_msg, "New Zero set!\r\n");
+				// send through uart
+				HAL_UART_Transmit(&huart2, (uint8_t *)&set_zero_msg, sizeof(set_zero_msg), 100);
 	            break;
 
 	        case '\e':
-	        	stream_en = 0;
 	        	UART_Rx_data[0] = '*';
+	        	stream_en = 0;
+	        	UART_send_instruction_msg();
 	            break;
 
 	        case '*':
 	            break;
 
 	        default:
-	        	; //empty statement
-	        	char uart_tx_buffer[20];
-				snprintf(uart_tx_buffer, sizeof uart_tx_buffer, "INVALID COMMAND\r\n");
-				// truncate buffer at newline character
-				char line_end = '\n';
-				char *ptr = strchr(uart_tx_buffer, line_end);
-				if(ptr){
-					uint16_t size = ptr - uart_tx_buffer + 1;
-					// send through uart
-					HAL_UART_Transmit(&huart2, (uint8_t *)&uart_tx_buffer, size, 100);
-				}
-				UART_Rx_data[0] = '*';
+	        	UART_Rx_data[0] = '*';
+	        	char invalid_zero_msg[19];
+				snprintf(invalid_zero_msg, sizeof invalid_zero_msg, "INVALID COMMAND!\r\n");
+				// send through uart
+				HAL_UART_Transmit(&huart2, (uint8_t *)&invalid_zero_msg, sizeof(invalid_zero_msg), 100);
 	    }
 
 	/*

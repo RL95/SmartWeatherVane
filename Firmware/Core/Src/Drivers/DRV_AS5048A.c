@@ -7,6 +7,8 @@
 
 #include "DRV_AS5048A.h"
 
+#define ANGLE_MODE_1 1
+
 /**
  * @brief Initialiser Sets up the SPI interface
  */
