@@ -14,6 +14,7 @@
 #include "stdbool.h"
 #include "stdarg.h"
 #include "string.h"
+#include "FSM.h"
 #include "Drivers/DRV_timer_callback.h"
 #include "Drivers/DRV_AS5048A.h"
 #include "Drivers/DRV_TMC2660.h"
