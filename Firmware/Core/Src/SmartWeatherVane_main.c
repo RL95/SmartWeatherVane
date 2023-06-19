@@ -33,7 +33,13 @@ void SmartWeatherVane_main(){
 	zero_position_map = AS5048A_read2angle(&Encoder, zero_position);
 	printf("Angle: %f\n", zero_position_map);
 
-	TMC_test_run();
+	UART_send_start_msg();
+	UART_send_instruction_msg();
+
+	// send header
+	HAL_Delay(5000);
+
+	//TMC_test_run();
 
 	// super-loop
 	while(1){
@@ -41,7 +47,7 @@ void SmartWeatherVane_main(){
 		raw_angle = AS5048A_getRawRotation(&Encoder);
 		angle =  AS5048A_read2angle(&Encoder, raw_angle);
 
-		char uart_tx_buffer[30];
+		char uart_tx_buffer[1024];
 		snprintf(uart_tx_buffer, sizeof uart_tx_buffer, "%.3f \r\n", angle);
 		// truncate buffer at newline character
 		char line_end = '\n';

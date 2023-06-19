@@ -19,6 +19,7 @@
 #include "Drivers/DRV_TMC2660.h"
 #include "Drivers/DRV_PWM.h"
 #include "Drivers/DRV_motion_profiling.h"
+#include "Drivers/DRV_uart_TxRx.h"
 
 void SmartWeatherVane_main();
 void Timer_Callback();
