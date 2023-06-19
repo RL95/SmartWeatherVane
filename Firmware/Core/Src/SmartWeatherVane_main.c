@@ -11,6 +11,9 @@ uint16_t raw_angle = 0;
 float current_angle_map = 0;
 float angle = 0;
 
+TMC Motor;
+AS5048A Encoder;
+
 /**
   * @brief  Master Rx Transfer completed callback.
   * @param  hi2c Pointer to a I2C_HandleTypeDef structure that contains
@@ -19,11 +22,9 @@ float angle = 0;
 void SmartWeatherVane_main(){
 
 	// initialise Stepper motor
-	TMC Motor;
 	TMC_init(&Motor);
 
 	// initialise magnetic absolute encoder
-	AS5048A Encoder;
 	AS5048A_init(&Encoder, &hspi2, AS5048_CS_GPIO_Port, AS5048_CS_Pin);
 	HAL_Delay(100);
 	uint16_t zero_position;
@@ -39,37 +40,33 @@ void SmartWeatherVane_main(){
 	UART_send_start_msg();
 	UART_send_instruction_msg();
 
-	// send header
-	HAL_Delay(5000);
+	// start 19kHz timer callback
+	Timer_Callback_START();
 
 	//TMC_test_run();
 
 	// super-loop
-	while(1){
-		// get angle
-		raw_angle = AS5048A_getRawRotation(&Encoder);
-		angle =  AS5048A_read2angle(&Encoder, raw_angle);
-
-		char uart_tx_buffer[1024];
-		snprintf(uart_tx_buffer, sizeof uart_tx_buffer, "%.3f \r\n", angle);
-		// truncate buffer at newline character
-		char line_end = '\n';
-		char *ptr = strchr(uart_tx_buffer, line_end);
-		if(ptr){
-			uint16_t size = ptr - uart_tx_buffer + 1;
-			// send through uart
-			HAL_UART_Transmit(&huart2, (uint8_t *)&uart_tx_buffer, size, 100);
-		}
-
-		HAL_Delay(10);
-	}
+	while(1){}
 }
 
 /**
   * @brief  TIM10 callback running @ 10kHz
   */
 void Timer_Callback(){
+	// get angle
+	raw_angle = AS5048A_getRawRotation(&Encoder);
+	angle =  AS5048A_read2angle(&Encoder, raw_angle);
 
+	char uart_tx_buffer[1024];
+	snprintf(uart_tx_buffer, sizeof uart_tx_buffer, "%.3f \r\n", angle);
+	// truncate buffer at newline character
+	char line_end = '\n';
+	char *ptr = strchr(uart_tx_buffer, line_end);
+	if(ptr){
+		uint16_t size = ptr - uart_tx_buffer + 1;
+		// send through uart
+		HAL_UART_Transmit(&huart2, (uint8_t *)&uart_tx_buffer, size, 100);
+	}
 }
 
 
