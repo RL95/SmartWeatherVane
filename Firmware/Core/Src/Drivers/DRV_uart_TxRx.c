@@ -37,7 +37,6 @@ void UART_send_start_msg(){
 			"	                           |       Author : RL        |\r\n"
 			"	                           |                          |\r\n"
 			"	                           |--------------------------|\r\n"
-			"\r\n"
 			"\r\n*");
 	//HAL_UART_Transmit(&huart2, (uint8_t *)&uart_tx_buffer, 629, 100);
 	// truncate buffer at newline character
@@ -53,10 +52,12 @@ void UART_send_start_msg(){
 void UART_send_instruction_msg(){
 	char uart_tx_buffer[4096];
 	snprintf(uart_tx_buffer, sizeof uart_tx_buffer,
+			"\r\n"
 			"	---------------    Use commands below to control the system    ---------------\r\n"
 			"\r\n"
 			"	Send 'z'      To set current position as zero.\r\n"
-			"	Send 'lX'     To lock/unlock brake (X = 1 -> lock, X = 0 -> unlock).\r\n"
+			"	Send 'b'      To toggle brake state.\r\n"
+			"	Send 'l'      To get current brake state (0 = unlocked, 1 = locked).\r\n"
 			"	Send 'mX'     To move to a given X angle.\r\n"
 			"	              For example :   'm12' will move the system to 12deg.\r\n"
 			"\r\n"

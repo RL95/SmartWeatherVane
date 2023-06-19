@@ -14,6 +14,7 @@ float angle_offset = 0;
 
 bool stream_en = 0;
 bool stream_once = 0;
+bool brake_state = 1;
 
 TMC Motor;
 AS5048A Encoder;
@@ -88,17 +89,34 @@ void Timer_Callback_10Hz(){
 void Timer_Callback_10kHz(){
 	switch(UART_Rx_data[0])
 	    {
-	        case 's':
+	        case 's': // Stream angle on UART
 	        	UART_Rx_data[0] = '*';
 	        	stream_en = 1;
 	            break;
 
-	        case 'a':
+	        case 'a': // Stream angle on UART once
 	        	UART_Rx_data[0] = '*';
 	        	stream_once = 1;
 	            break;
 
-	        case 'z':
+	        case 'b': // Set brake state
+	        	UART_Rx_data[0] = '*';
+	        	brake_state = !brake_state;
+	        	char set_brake_msg[31];
+				snprintf(set_brake_msg, sizeof set_brake_msg, "Brake toggled. New state : %d\r\n", brake_state);
+				// send through uart
+				HAL_UART_Transmit(&huart2, (uint8_t *)&set_brake_msg, sizeof(set_brake_msg), 100);
+	            break;
+
+	        case 'l': // get brake state
+	        	UART_Rx_data[0] = '*';
+	        	char set_brake_state_msg[18];
+				snprintf(set_brake_state_msg, sizeof set_brake_state_msg, "Brake state : %d\r\n", brake_state);
+				// send through uart
+				HAL_UART_Transmit(&huart2, (uint8_t *)&set_brake_state_msg, sizeof(set_brake_state_msg), 100);
+	            break;
+
+	        case 'z': // Set current angle to zero
 	        	UART_Rx_data[0] = '*';
 	        	angle_offset = AS5048A_read2angle(&Encoder, raw_angle);
 	        	char set_zero_msg[16];
@@ -107,16 +125,16 @@ void Timer_Callback_10kHz(){
 				HAL_UART_Transmit(&huart2, (uint8_t *)&set_zero_msg, sizeof(set_zero_msg), 100);
 	            break;
 
-	        case '\e':
+	        case '\e': // Escape all task and go back to menu
 	        	UART_Rx_data[0] = '*';
 	        	stream_en = 0;
 	        	UART_send_instruction_msg();
 	            break;
 
-	        case '*':
+	        case '*': // Do nothing
 	            break;
 
-	        default:
+	        default: // Invalid message received
 	        	UART_Rx_data[0] = '*';
 	        	char invalid_zero_msg[19];
 				snprintf(invalid_zero_msg, sizeof invalid_zero_msg, "INVALID COMMAND!\r\n");
