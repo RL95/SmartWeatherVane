@@ -50,9 +50,9 @@ void SmartWeatherVane_main(){
 }
 
 /**
-  * @brief  TIM10 callback running @ 10kHz
+  * @brief  TIM10 callback running @ 10Hz
   */
-void Timer_Callback(){
+void Timer_Callback_10Hz(){
 	// get angle
 	raw_angle = AS5048A_getRawRotation(&Encoder);
 	angle =  AS5048A_read2angle(&Encoder, raw_angle);
@@ -67,6 +67,13 @@ void Timer_Callback(){
 		// send through uart
 		HAL_UART_Transmit(&huart2, (uint8_t *)&uart_tx_buffer, size, 100);
 	}
+}
+
+/**
+  * @brief  TIM11 callback running @ 10kHz
+  */
+void Timer_Callback_10kHz(){
+
 }
 
 

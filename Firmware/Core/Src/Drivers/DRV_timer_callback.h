@@ -14,8 +14,10 @@ void Timer_Callback_START();
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim);
 
 extern TIM_HandleTypeDef htim10;
+extern TIM_HandleTypeDef htim11;
 
-extern void Timer_Callback();
+extern void Timer_Callback_10Hz();
+extern void Timer_Callback_10kHz();
 
 extern bool CALLBACK_FLAG;
 
