@@ -15,6 +15,6 @@ void UART_send(char * msg);
 void UART_send_start_msg();
 void UART_send_instruction_msg();
 
-
+extern uint8_t UART_Rx_data[1];
 
 #endif /* SRC_DRIVERS_DRV_UART_TXRX_H_ */

@@ -8,13 +8,13 @@
 
 #include "DRV_uart_TxRx.h"
 
-uint8_t UART_Rx_data[1];  //  creating a buffer of 1 bytes
+uint8_t UART_Rx_data[1] = {'*'};  //  creating a buffer of 1 bytes
 
 /**
   * @brief  Initialise the first call for UART interrupt call
   */
 void UART_init(){
-	HAL_UART_Receive_IT (&huart2, UART_Rx_data, 8);
+	HAL_UART_Receive_IT (&huart2, UART_Rx_data, 1);
 }
 
 void UART_send(char * msg){
