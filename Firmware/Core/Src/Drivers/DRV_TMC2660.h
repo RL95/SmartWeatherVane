@@ -21,7 +21,7 @@
 #define MIN_FREQ			20.0f		// Hz
 #define MAX_SELF_START_FREQ	800.0f		// Hz (when motor not loaded and in full-step mode)
 #define MICROSTEPPING_SIZE	16.0f		// Step size is multiplied by this factor
-#define PWM_DUTY			50.0f
+#define PWM_DUTY			50.0f		// fixed step signal duty cycle
 
 
 // GPIO macros
