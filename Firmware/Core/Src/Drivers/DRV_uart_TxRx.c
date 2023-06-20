@@ -9,6 +9,10 @@
 #include "DRV_uart_TxRx.h"
 
 uint8_t UART_Rx_data[1] = {'*'};  //  creating a buffer of 1 bytes
+uint8_t cmd_buffer[8] = {' ',' ',' ',' ',' ',' ',' ',' '};
+uint8_t cmd_buffer_end_idx = 0;
+bool get_val_flag = 0;
+bool get_val_done_flag = 0;
 
 /**
   * @brief  Initialise the first call for UART interrupt call
@@ -90,4 +94,14 @@ void UART_send_instruction_msg(){
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
   HAL_UART_Receive_IT(huart, UART_Rx_data, 1);
+  if(get_val_flag && cmd_buffer_end_idx != '\r'){
+	  cmd_buffer[cmd_buffer_end_idx] = UART_Rx_data[0];
+	  cmd_buffer_end_idx ++;
+	  if (UART_Rx_data[0] == '\r') {
+		  get_val_flag = 0;
+		  get_val_done_flag = 1;
+		  cmd_buffer_end_idx --;
+	  }
+  }
+
 }

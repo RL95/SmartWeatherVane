@@ -9,12 +9,12 @@
 #define SRC_SMARTWEATHERVANE_MAIN_H_
 
 #include <main.h>
+#include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
 #include "stdbool.h"
 #include "stdarg.h"
 #include "string.h"
-#include "FSM.h"
 #include "Drivers/DRV_timer_callback.h"
 #include "Drivers/DRV_AS5048A.h"
 #include "Drivers/DRV_TMC2660.h"

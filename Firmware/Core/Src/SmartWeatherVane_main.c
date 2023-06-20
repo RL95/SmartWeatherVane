@@ -15,6 +15,9 @@ float angle_offset = 0;
 bool stream_en = 0;
 bool stream_once = 0;
 bool brake_state = 1;
+bool move_to_flag = 0;
+bool jog_flag = 0;
+float input_val = 0;
 
 TMC Motor;
 AS5048A Encoder;
@@ -89,6 +92,20 @@ void Timer_Callback_10Hz(){
 void Timer_Callback_10kHz(){
 	switch(UART_Rx_data[0])
 	    {
+	        case 'm': // move to X angle
+	        	UART_Rx_data[0] = '*';
+	        	get_val_flag = 1;
+	        	move_to_flag = 1;
+
+	            break;
+
+	        case 'j': // move to X angle
+	        	UART_Rx_data[0] = '*';
+	        	get_val_flag = 1;
+	        	jog_flag = 1;
+
+	            break;
+
 	        case 's': // Stream angle on UART
 	        	UART_Rx_data[0] = '*';
 	        	stream_en = 1;
@@ -135,12 +152,39 @@ void Timer_Callback_10kHz(){
 	            break;
 
 	        default: // Invalid message received
-	        	UART_Rx_data[0] = '*';
-	        	char invalid_zero_msg[19];
-				snprintf(invalid_zero_msg, sizeof invalid_zero_msg, "INVALID COMMAND!\r\n");
-				// send through uart
-				HAL_UART_Transmit(&huart2, (uint8_t *)&invalid_zero_msg, sizeof(invalid_zero_msg), 100);
+	        	if(!get_val_flag && !get_val_done_flag){
+		        	UART_Rx_data[0] = '*';
+		        	char invalid_zero_msg[19];
+					snprintf(invalid_zero_msg, sizeof invalid_zero_msg, "INVALID COMMAND!\r\n");
+					// send through uart
+					HAL_UART_Transmit(&huart2, (uint8_t *)&invalid_zero_msg, sizeof(invalid_zero_msg), 100);
+	        	}
 	    }
+	if(get_val_done_flag){
+		UART_Rx_data[0] = '*';
+		//TODO add input validity check
+		// extract value
+		cmd_buffer[cmd_buffer_end_idx] = ' ';
+		input_val = atof(cmd_buffer);
+		memset(&cmd_buffer, ' ', sizeof(cmd_buffer)); // clear array
+
+		if(move_to_flag){
+        	char move_to_msg[25];
+			snprintf(move_to_msg, sizeof move_to_msg, "moving to %.3f\r\n", input_val);
+			// send through uart
+			HAL_UART_Transmit(&huart2, (uint8_t *)&move_to_msg, sizeof(move_to_msg), 100);
+			move_to_flag = 0;
+		}
+		else if(jog_flag){
+        	char move_to_msg[25];
+			snprintf(move_to_msg, sizeof move_to_msg, "jog %.3f\r\n", input_val);
+			// send through uart
+			HAL_UART_Transmit(&huart2, (uint8_t *)&move_to_msg, sizeof(move_to_msg), 100);
+			jog_flag = 0;
+		}
+		cmd_buffer_end_idx = 0;
+		get_val_done_flag = 0;
+	}
 
 	/*
 	if(UART_Rx_data[0] == 's') stream_en = 1;
