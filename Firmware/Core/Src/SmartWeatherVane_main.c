@@ -170,16 +170,28 @@ void Timer_Callback_10kHz(){
 
 		if(move_to_flag){
         	char move_to_msg[25];
-			snprintf(move_to_msg, sizeof move_to_msg, "moving to %.3f\r\n", input_val);
-			// send through uart
-			HAL_UART_Transmit(&huart2, (uint8_t *)&move_to_msg, sizeof(move_to_msg), 100);
+			snprintf(move_to_msg, sizeof move_to_msg, "moving to %.3f\r\n*", input_val);
+			// truncate buffer at newline character
+			char line_end = '*';
+			char *ptr = strchr(move_to_msg, line_end);
+			if(ptr){
+				uint16_t size = ptr - move_to_msg;
+				// send through uart
+				HAL_UART_Transmit(&huart2, (uint8_t *)&move_to_msg, size, 100);
+			}
 			move_to_flag = 0;
 		}
 		else if(jog_flag){
-        	char move_to_msg[25];
-			snprintf(move_to_msg, sizeof move_to_msg, "jog %.3f\r\n", input_val);
-			// send through uart
-			HAL_UART_Transmit(&huart2, (uint8_t *)&move_to_msg, sizeof(move_to_msg), 100);
+        	char jog_msg[25];
+			snprintf(jog_msg, sizeof jog_msg, "jog %.3f\r\n*", input_val);
+			// truncate buffer at newline character
+			char line_end = '*';
+			char *ptr = strchr(jog_msg, line_end);
+			if(ptr){
+				uint16_t size = ptr - jog_msg;
+				// send through uart
+				HAL_UART_Transmit(&huart2, (uint8_t *)&jog_msg, size, 100);
+			}
 			jog_flag = 0;
 		}
 		cmd_buffer_end_idx = 0;
