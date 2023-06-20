@@ -55,9 +55,10 @@ void Timer_Callback_10Hz(){
   */
 void Timer_Callback_1kHz(){
 	step_FSM_menu();
+	update_current_angle();
 	step_FSM_retval();
 	cmd_angle = get_FSM_target_angle();
-	//TMC_move_to(90,8000);
+	TMC_move_to(cmd_angle, get_current_angle(), 8000);
 }
 
 

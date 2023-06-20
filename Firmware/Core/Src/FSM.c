@@ -155,15 +155,21 @@ float get_FSM_target_angle(){
 	return target_angle;
 }
 
+void update_current_angle(){
+	// get angle
+	raw_angle = AS5048A_getRawRotation(&Encoder);
+	float angle_temp =  AS5048A_read2angle(&Encoder, raw_angle) - angle_offset;
+	angle = AS5048A_normalize(&Encoder,angle_temp);
+}
+
+float get_current_angle(){
+	return angle;
+}
+
 void step_FSM_sendval(){
 	if(stream_en || stream_once){
-		// get angle
-		raw_angle = AS5048A_getRawRotation(&Encoder);
-		float angle_temp =  AS5048A_read2angle(&Encoder, raw_angle) - angle_offset;
-		angle = AS5048A_normalize(&Encoder,angle_temp);
-
 		char uart_tx_buffer[1024];
-		snprintf(uart_tx_buffer, sizeof uart_tx_buffer, "%.3f \r\n", angle);
+		snprintf(uart_tx_buffer, sizeof uart_tx_buffer, "%.3f \r\n", get_current_angle());
 		// truncate buffer at newline character
 		char line_end = '\n';
 		char *ptr = strchr(uart_tx_buffer, line_end);

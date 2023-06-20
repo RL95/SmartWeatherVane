@@ -6,9 +6,10 @@
  */
 
 #include "DRV_TMC2660.h"
+#include "../FSM.h"
 
 int t = 1;
-float current_freq = 20;
+float current_freq = MIN_FREQ;
 
 /**
  * @brief Initialiser Sets up the SPI interface
@@ -20,12 +21,31 @@ void TMC_init(TMC *PMSM){
 	TMC_STEP_L;
 }
 
-void TMC_move_to(float angle, float maxfreq){
-	TMC_EN_DRV;
-	TMC_DIR_CW;
-	PWM_Start();
-	PWM_Set(current_freq, 50);
-	if(current_freq < maxfreq)current_freq ++;
+void TMC_move_to(float target_angle, float current_angle, float maxfreq){
+	// compute error
+	float error = target_angle - current_angle;
+	if(abs(error) > 1.0){
+		//choose rotation direction (angle increase when rotating clockwise)
+		if(error >= 0) {
+			TMC_DIR_CW;
+		}
+		else {
+			TMC_DIR_CCW;
+		}
+		// start driver
+		PWM_Start();
+		TMC_EN_DRV;
+		// accelerate motor
+		PWM_Set(current_freq, PWM_DUTY);
+		if(current_freq < maxfreq)current_freq ++;
+	}
+	else{
+		TMC_DIS_DRV;
+		PWM_Stop();
+		current_freq = MIN_FREQ;
+	}
+
+
 }
 
 
