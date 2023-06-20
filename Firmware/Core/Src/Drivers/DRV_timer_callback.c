@@ -26,5 +26,5 @@ void Timer_Callback_START(){
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 	// run callback
 	if(htim == &htim10) Timer_Callback_10Hz();
-	if(htim == &htim11) Timer_Callback_10kHz();
+	if(htim == &htim11) Timer_Callback_1kHz();
 }

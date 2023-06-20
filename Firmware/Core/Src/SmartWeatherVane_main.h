@@ -24,7 +24,7 @@
 
 void SmartWeatherVane_main();
 void Timer_Callback_10Hz();
-void Timer_Callback_10kHz();
+void Timer_Callback_1kHz();
 int _write(int file, char *ptr, int len);
 
 extern UART_HandleTypeDef huart2;

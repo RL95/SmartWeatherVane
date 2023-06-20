@@ -89,7 +89,7 @@ void Timer_Callback_10Hz(){
 /**
   * @brief  TIM11 callback running @ 10kHz
   */
-void Timer_Callback_10kHz(){
+void Timer_Callback_1kHz(){
 	switch(UART_Rx_data[0])
 	    {
 	        case 'm': // move to X angle
@@ -162,40 +162,48 @@ void Timer_Callback_10kHz(){
 	    }
 	if(get_val_done_flag){
 		UART_Rx_data[0] = '*';
-		//TODO add input validity check
 		// extract value
 		cmd_buffer[cmd_buffer_end_idx] = ' ';
 		input_val = atof(cmd_buffer);
-		memset(&cmd_buffer, ' ', sizeof(cmd_buffer)); // clear array
-
-		if(move_to_flag){
-        	char move_to_msg[25];
-			snprintf(move_to_msg, sizeof move_to_msg, "moving to %.3f\r\n*", input_val);
-			// truncate buffer at newline character
-			char line_end = '*';
-			char *ptr = strchr(move_to_msg, line_end);
-			if(ptr){
-				uint16_t size = ptr - move_to_msg;
-				// send through uart
-				HAL_UART_Transmit(&huart2, (uint8_t *)&move_to_msg, size, 100);
-			}
-			move_to_flag = 0;
+		//TODO improve input validity check
+		// validity check
+		if(input_val == 0 && cmd_buffer[0] != '0'){
+        	char invalid_zero_msg[19];
+			snprintf(invalid_zero_msg, sizeof invalid_zero_msg, "INVALID COMMAND!\r\n");
+			// send through uart
+			HAL_UART_Transmit(&huart2, (uint8_t *)&invalid_zero_msg, sizeof(invalid_zero_msg), 100);
 		}
-		else if(jog_flag){
-        	char jog_msg[25];
-			snprintf(jog_msg, sizeof jog_msg, "jog %.3f\r\n*", input_val);
-			// truncate buffer at newline character
-			char line_end = '*';
-			char *ptr = strchr(jog_msg, line_end);
-			if(ptr){
-				uint16_t size = ptr - jog_msg;
-				// send through uart
-				HAL_UART_Transmit(&huart2, (uint8_t *)&jog_msg, size, 100);
+		else{
+			if(move_to_flag){
+	        	char move_to_msg[25];
+				snprintf(move_to_msg, sizeof move_to_msg, "moving to %.3f\r\n*", input_val);
+				// truncate buffer at newline character
+				char line_end = '*';
+				char *ptr = strchr(move_to_msg, line_end);
+				if(ptr){
+					uint16_t size = ptr - move_to_msg;
+					// send through uart
+					HAL_UART_Transmit(&huart2, (uint8_t *)&move_to_msg, size, 100);
+				}
+				move_to_flag = 0;
 			}
-			jog_flag = 0;
+			else if(jog_flag){
+	        	char jog_msg[25];
+				snprintf(jog_msg, sizeof jog_msg, "jog %.3f\r\n*", input_val);
+				// truncate buffer at newline character
+				char line_end = '*';
+				char *ptr = strchr(jog_msg, line_end);
+				if(ptr){
+					uint16_t size = ptr - jog_msg;
+					// send through uart
+					HAL_UART_Transmit(&huart2, (uint8_t *)&jog_msg, size, 100);
+				}
+				jog_flag = 0;
+			}
 		}
 		cmd_buffer_end_idx = 0;
 		get_val_done_flag = 0;
+		memset(&cmd_buffer, ' ', sizeof(cmd_buffer)); // clear array
 	}
 
 	/*

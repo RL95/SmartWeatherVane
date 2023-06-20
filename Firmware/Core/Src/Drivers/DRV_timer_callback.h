@@ -17,7 +17,7 @@ extern TIM_HandleTypeDef htim10;
 extern TIM_HandleTypeDef htim11;
 
 extern void Timer_Callback_10Hz();
-extern void Timer_Callback_10kHz();
+extern void Timer_Callback_1kHz();
 
 extern bool CALLBACK_FLAG;
 

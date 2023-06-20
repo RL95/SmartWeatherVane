@@ -7,6 +7,8 @@
 
 #include "DRV_TMC2660.h"
 
+int t = 1;
+
 /**
  * @brief Initialiser Sets up the SPI interface
  */
@@ -17,7 +19,10 @@ void TMC_init(TMC *PMSM){
 	TMC_STEP_L;
 }
 
-int t = 1;
+void TMC_move_to(float angle){
+
+}
+
 
 void TMC_test_run(){
 	TMC_EN_DRV;
