@@ -51,7 +51,7 @@ void Timer_Callback_10Hz(){
 }
 
 /**
-  * @brief  TIM11 callback running @ 10kHz
+  * @brief  TIM11 callback running @ 1kHz
   */
 void Timer_Callback_1kHz(){
 	step_FSM_menu();
