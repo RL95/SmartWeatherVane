@@ -8,6 +8,7 @@
 #include "SmartWeatherVane_main.h"
 
 TMC Motor;
+float cmd_angle = 0;
 
 /**
   * @brief  Master Rx Transfer completed callback.
@@ -28,6 +29,7 @@ void SmartWeatherVane_main(){
 	// settling time
 	HAL_Delay(1000);
 
+	// send startup messages
 	UART_send_start_msg();
 	UART_send_instruction_msg();
 
@@ -54,6 +56,8 @@ void Timer_Callback_10Hz(){
 void Timer_Callback_1kHz(){
 	step_FSM_menu();
 	step_FSM_retval();
+	cmd_angle = get_FSM_target_angle();
+	//TMC_move_to(90,8000);
 }
 
 

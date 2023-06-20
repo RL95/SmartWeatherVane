@@ -16,5 +16,7 @@ void init_FSM();
 void step_FSM_menu();
 void step_FSM_retval();
 void step_FSM_sendval();
+void get_target_angle();
+float get_FSM_target_angle();
 
 #endif /* SRC_FSM_H_ */

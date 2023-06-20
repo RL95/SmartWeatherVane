@@ -44,7 +44,7 @@ typedef struct TMC{
 } TMC;
 
 void TMC_init(TMC *PMSM);
-void TMC_move_to(float angle);
+void TMC_move_to(float angle, float maxfreq);
 void TMC_test_run();
 
 #endif /* SRC_DRIVERS_DRV_TMC2660_H_ */

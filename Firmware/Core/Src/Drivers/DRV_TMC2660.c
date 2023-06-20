@@ -8,6 +8,7 @@
 #include "DRV_TMC2660.h"
 
 int t = 1;
+float current_freq = 20;
 
 /**
  * @brief Initialiser Sets up the SPI interface
@@ -19,8 +20,12 @@ void TMC_init(TMC *PMSM){
 	TMC_STEP_L;
 }
 
-void TMC_move_to(float angle){
-
+void TMC_move_to(float angle, float maxfreq){
+	TMC_EN_DRV;
+	TMC_DIR_CW;
+	PWM_Start();
+	PWM_Set(current_freq, 50);
+	if(current_freq < maxfreq)current_freq ++;
 }
 
 

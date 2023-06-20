@@ -12,6 +12,7 @@ AS5048A Encoder;
 float angle_offset = 0;
 float angle = 0;
 uint16_t raw_angle = 0;
+float target_angle = 0;
 
 bool stream_en = 0;
 bool stream_once = 0;
@@ -126,6 +127,7 @@ void step_FSM_retval(){
 					// send through uart
 					HAL_UART_Transmit(&huart2, (uint8_t *)&move_to_msg, size, 100);
 				}
+				target_angle = input_val;
 				move_to_flag = 0;
 			}
 			else if(jog_flag){
@@ -139,6 +141,7 @@ void step_FSM_retval(){
 					// send through uart
 					HAL_UART_Transmit(&huart2, (uint8_t *)&jog_msg, size, 100);
 				}
+				target_angle = target_angle + input_val;
 				jog_flag = 0;
 			}
 		}
@@ -146,6 +149,10 @@ void step_FSM_retval(){
 		get_val_done_flag = 0;
 		memset(&cmd_buffer, ' ', sizeof(cmd_buffer)); // clear array
 	}
+}
+
+float get_FSM_target_angle(){
+	return target_angle;
 }
 
 void step_FSM_sendval(){
@@ -169,3 +176,5 @@ void step_FSM_sendval(){
 		if (stream_once) stream_once = 0;
 	}
 }
+
+
